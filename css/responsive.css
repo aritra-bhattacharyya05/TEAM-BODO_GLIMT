@@ -1,0 +1,147 @@
+/* ============================================================
+   responsive.css — Mobile and tablet breakpoints
+   ============================================================ */
+
+/* ── Tablet (≤ 960px) ── */
+@media (max-width: 960px) {
+  .auth-grid,
+  .text-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .steps-grid {
+    grid-template-columns: 1fr;
+    padding: 32px 24px;
+    gap: 28px;
+  }
+
+  .step:not(:last-child)::after {
+    display: none;
+  }
+}
+
+/* ── Mobile (≤ 700px) ── */
+@media (max-width: 700px) {
+  /* Nav */
+  nav {
+    padding: 0 16px;
+    height: 56px;
+  }
+
+  .nav-hide-sm .nav-link {
+    display: none;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 64px 20px 60px;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .hero-sub {
+    font-size: 14px;
+  }
+
+  .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    justify-content: center;
+  }
+
+  .hero-visual {
+    max-width: 100%;
+  }
+
+  .hv-body {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  /* Sections */
+  .section {
+    padding: 56px 20px;
+  }
+
+  .feat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .eyebrow::before,
+  .eyebrow::after {
+    display: none;
+  }
+
+  /* Authenticator page */
+  .auth-wrap {
+    padding: 24px 16px 60px;
+  }
+
+  .mode-tabs {
+    width: 100%;
+  }
+
+  .mode-tab {
+    flex: 1;
+    justify-content: center;
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  /* API banner */
+  .api-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .api-key-row {
+    width: 100%;
+  }
+
+  /* Score card head on mobile */
+  .score-card-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  /* Dual rings stack vertically */
+  .dual-ring-wrap {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Footer */
+  footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Breakdown table — hide Sentence column */
+  .bk-table th:nth-child(2),
+  .bk-table td:nth-child(2) {
+    display: none;
+  }
+}
+
+/* ── Very small screens (≤ 400px) ── */
+@media (max-width: 400px) {
+  .hero h1 {
+    font-size: 28px;
+  }
+
+  .mode-tab span {
+    display: none;
+  }
+}

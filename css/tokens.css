@@ -1,0 +1,89 @@
+/* ============================================================
+   tokens.css — Design tokens, reset, and base typography
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* ── Backgrounds ── */
+  --bg:       #0d0f0f;
+  --s1:       #131616;
+  --s2:       #191e1e;
+  --s3:       #1f2626;
+
+  /* ── Borders ── */
+  --border:   rgba(255, 255, 255, 0.06);
+  --border2:  rgba(255, 255, 255, 0.11);
+
+  /* ── Accent (teal) ── */
+  --accent:   #00c4a0;
+  --accent-l: #00e8be;
+  --accent-d: rgba(0, 196, 160, 0.13);
+  --accent-b: rgba(0, 196, 160, 0.28);
+
+  /* ── Semantic colors ── */
+  --green:     #1ec97a;
+  --green-dim: rgba(30, 201, 122, 0.12);
+  --red:       #f04f5e;
+  --red-d:     rgba(240, 79, 94, 0.12);
+  --amber:     #ffb830;
+  --amb-d:     rgba(255, 184, 48, 0.12);
+
+  /* ── Text ── */
+  --text:  #dce8e5;
+  --text2: #7a9490;
+  --text3: #435250;
+
+  /* ── Typography ── */
+  --font:    'Outfit', sans-serif;
+  --display: 'Syne', sans-serif;
+  --mono:    'DM Mono', monospace;
+
+  /* ── Radii ── */
+  --r:  14px;
+  --rs: 8px;
+
+  /* ── Elevation ── */
+  --shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+
+  /* ── Motion ── */
+  --t: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Custom scrollbar ── */
+::-webkit-scrollbar          { width: 5px; }
+::-webkit-scrollbar-track    { background: var(--s2); }
+::-webkit-scrollbar-thumb    { background: var(--s3); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-b); }
+
+/* ── Keyframes ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

@@ -1,0 +1,355 @@
+<!-- ============================================================
+     pages/authenticator.html — Authenticator page content
+     ============================================================ -->
+
+<div id="page-authenticator" class="page">
+  <div class="auth-wrap">
+
+    <!-- Header -->
+    <div class="auth-header">
+      <button class="back-btn" onclick="showPage('home')">← Back to Home</button>
+      <div class="phase-badge"><span class="phase-dot"></span> Authenticator v2 · Groq Powered</div>
+      <h1>Content Analyzer</h1>
+      <p>Verify images and detect AI-generated text — all in one place.</p>
+    </div>
+
+
+
+    <!-- Mode Tab Bar -->
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="tab-image" onclick="switchMode('image')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="3"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <path d="M21 15l-5-5L5 21"/>
+        </svg>
+        Image Authentication
+      </button>
+      <button class="mode-tab" id="tab-text" onclick="switchMode('text')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        Text AI Detector
+      </button>
+    </div>
+
+    <!-- ══════════════ IMAGE TAB ══════════════ -->
+    <div class="tab-content active" id="tab-content-image">
+      <div class="auth-grid">
+
+        <!-- Input panel -->
+        <div class="panel">
+          <div class="panel-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="3"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
+            <span class="panel-title">Image Input</span>
+          </div>
+          <div class="panel-body">
+
+            <!-- 1. File upload -->
+            <div class="input-section">
+              <div class="input-label"><div class="input-label-num">1</div> Upload Image</div>
+              <div class="drop-zone" id="dropZone"
+                   ondragover="event.preventDefault();this.classList.add('dragging')"
+                   ondragleave="this.classList.remove('dragging')"
+                   ondrop="handleDrop(event)">
+                <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" onchange="handleFile(this.files[0])">
+                <div class="drop-icon">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                </div>
+                <div class="drop-text">Drag & drop your image here</div>
+                <div class="drop-sub">or</div>
+                <button class="btn-upload" onclick="event.stopPropagation();document.getElementById('fileInput').click()">Browse Files</button>
+                <div class="drop-sub" style="margin-top:2px">JPG, PNG, WebP · Max 10MB</div>
+              </div>
+            </div>
+
+            <!-- File preview strip -->
+            <div class="preview-strip" id="previewStrip">
+              <img class="preview-thumb" id="previewThumb" src="" alt="">
+              <div class="preview-info">
+                <div class="preview-name" id="previewName">—</div>
+                <div class="preview-size" id="previewSizeText">—</div>
+              </div>
+              <button class="preview-remove" onclick="clearImageInput()" title="Remove">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <line x1="18" y1="6" x2="6" y2="18"/>
+                  <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="input-divider"></div>
+
+            <!-- 2. Clipboard paste -->
+            <div class="input-section">
+              <div class="input-label"><div class="input-label-num">2</div> Paste Image</div>
+              <div class="paste-zone" id="pasteZone" tabindex="0">
+                <div class="paste-hint">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:.4">
+                    <rect x="9" y="2" width="6" height="4" rx="1"/>
+                    <path d="M15 2H9a1 1 0 0 0-1 1v1H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V3a1 1 0 0 0-1-1z"/>
+                  </svg>
+                  Click here then Ctrl+V / ⌘+V to paste
+                </div>
+              </div>
+            </div>
+
+            <div class="input-divider"></div>
+
+            <!-- 3. URL input -->
+            <div class="input-section">
+              <div class="input-label"><div class="input-label-num">3</div> Paste Image URL</div>
+              <div class="url-row">
+                <input class="url-input" type="url" id="urlInput" placeholder="https://example.com/image.jpg" oninput="onUrlInput()">
+                <button class="btn-validate" onclick="validateUrl()">Validate</button>
+              </div>
+              <div class="error-msg" id="urlError">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="12"/>
+                  <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <span id="urlErrorText">Please enter a valid image URL.</span>
+              </div>
+            </div>
+
+            <button class="btn-analyze" id="analyzeBtn" disabled onclick="runImageAnalysis()">
+              <div class="spinner"></div>
+              <span class="btn-label">Analyze Image</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Results panel -->
+        <div>
+          <div class="results-placeholder" id="resultsPlaceholder">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <p>Image results will appear here</p>
+          </div>
+
+          <!-- Score ring card -->
+          <div class="score-card" id="scoreCard" style="display:none">
+            <div class="score-card-head">
+              Authenticity Score
+              <span class="groq-badge" id="imgSourceBadge">Groq AI</span>
+            </div>
+            <div class="score-card-body">
+              <div class="ring-container">
+                <svg class="ring-svg" viewBox="0 0 128 128">
+                  <circle class="ring-track" cx="64" cy="64" r="54"/>
+                  <circle class="ring-fill" id="ringFill" cx="64" cy="64" r="54" stroke-dasharray="339.3" stroke-dashoffset="339.3"/>
+                </svg>
+                <div class="ring-text">
+                  <span class="ring-pct" id="ringPct">0%</span>
+                  <span class="ring-label-small">Score</span>
+                </div>
+              </div>
+              <div class="score-verdict" id="scoreVerdict"></div>
+              <p style="font-size:13px;color:var(--text2);text-align:center;max-width:280px" id="scoreDesc"></p>
+            </div>
+          </div>
+
+          <!-- Attribute bars -->
+          <div class="attr-card" id="attrCard" style="display:none">
+            <div class="attr-card-head">Detected Attributes</div>
+            <div class="attr-list" id="attrList"></div>
+          </div>
+
+          <!-- Groq reasoning -->
+          <div class="reasoning-card" id="imgReasoningCard" style="display:none">
+            <div class="reasoning-head">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 16v-4M12 8h.01"/>
+              </svg>
+              Groq Analysis
+            </div>
+            <div class="reasoning-body" id="imgReasoningBody"></div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /IMAGE TAB -->
+
+    <!-- ══════════════ TEXT TAB ══════════════ -->
+    <div class="tab-content" id="tab-content-text">
+      <div class="text-grid">
+
+        <!-- Input panel -->
+        <div>
+          <div class="panel">
+            <div class="panel-header">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+              <span class="panel-title">Text Input</span>
+            </div>
+            <div class="panel-body">
+              <div class="input-section">
+                <div class="input-label">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                  Paste or Type Your Text
+                </div>
+                <textarea class="text-input-area" id="textInput"
+                  placeholder="Paste an article, essay, email, or any text you want to scan for AI-generated content..."
+                  oninput="onTextInput()"></textarea>
+                <div class="text-meta">
+                  <span class="text-word-count" id="wordCount">0 words · 0 sentences</span>
+                  <button class="text-clear-btn" onclick="clearTextInput()">Clear</button>
+                </div>
+              </div>
+              <div class="sample-chips">
+                <span class="sample-chips-label">Try a sample:</span>
+                <button class="chip chip-teal"  onclick="loadSample('ai')">+ AI-written</button>
+                <button class="chip chip-green" onclick="loadSample('human')">+ Human-written</button>
+                <button class="chip chip-amber" onclick="loadSample('mixed')">+ Mixed</button>
+              </div>
+              <button class="btn-analyze" id="textAnalyzeBtn" disabled onclick="runTextAnalysis()">
+                <div class="spinner"></div>
+                <span class="btn-label">Detect AI Content</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results panel -->
+        <div>
+          <div class="text-results-placeholder" id="textResultsPlaceholder">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            <p>AI detection results will appear here</p>
+          </div>
+
+          <div id="textScoreOuter" style="display:none">
+            <!-- Dual ring card -->
+            <div class="score-card">
+              <div class="score-card-head">
+                AI Detection Score
+                <span class="groq-badge" id="textSourceBadge">Groq AI</span>
+              </div>
+              <div class="score-card-body">
+                <div class="dual-ring-wrap">
+                  <div class="ring-group">
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 128 128">
+                        <circle class="ring-track" cx="64" cy="64" r="54"/>
+                        <circle class="ring-fill" id="textRingFill" cx="64" cy="64" r="54" stroke-dasharray="339.3" stroke-dashoffset="339.3"/>
+                      </svg>
+                      <div class="ring-text">
+                        <span class="ring-pct" id="textRingPct">0%</span>
+                        <span class="ring-label-small">AI Score</span>
+                      </div>
+                    </div>
+                    <div class="ring-group-label">AI Generated</div>
+                  </div>
+                  <div class="ring-group">
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 128 128">
+                        <circle class="ring-track" cx="64" cy="64" r="54"/>
+                        <circle class="ring-fill" id="humanRingFill" cx="64" cy="64" r="54"
+                          stroke-dasharray="339.3" stroke-dashoffset="339.3" stroke="var(--green)"/>
+                      </svg>
+                      <div class="ring-text">
+                        <span class="ring-pct" id="humanRingPct" style="color:var(--green)">0%</span>
+                        <span class="ring-label-small">Human</span>
+                      </div>
+                    </div>
+                    <div class="ring-group-label">Human Written</div>
+                  </div>
+                </div>
+                <div class="score-verdict" id="textVerdict"></div>
+                <div class="conf-section" style="width:100%">
+                  <div class="conf-title">Content Breakdown</div>
+                  <div class="conf-row">
+                    <span class="conf-lbl" style="color:var(--red)">AI Generated</span>
+                    <div class="conf-track"><div class="conf-fill fill-ai" id="confAiBar"></div></div>
+                    <span class="conf-pct-lbl" id="confAiPct" style="color:var(--red)">—</span>
+                  </div>
+                  <div class="conf-row">
+                    <span class="conf-lbl" style="color:var(--green)">Human Written</span>
+                    <div class="conf-track"><div class="conf-fill fill-human" id="confHumanBar"></div></div>
+                    <span class="conf-pct-lbl" id="confHumanPct" style="color:var(--green)">—</span>
+                  </div>
+                  <div class="conf-row">
+                    <span class="conf-lbl" style="color:var(--amber)">Uncertain</span>
+                    <div class="conf-track"><div class="conf-fill fill-mixed" id="confMixedBar"></div></div>
+                    <span class="conf-pct-lbl" id="confMixedPct" style="color:var(--amber)">—</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Groq reasoning for text -->
+            <div class="reasoning-card" id="textReasoningCard" style="display:none;margin-top:16px">
+              <div class="reasoning-head">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 16v-4M12 8h.01"/>
+                </svg>
+                Groq Analysis
+              </div>
+              <div class="reasoning-body" id="textReasoningBody"></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /text-grid -->
+
+      <!-- Sentence highlight + breakdown table (full width) -->
+      <div id="textHighlightSection" style="display:none;margin-top:20px">
+        <div class="highlight-card">
+          <div class="highlight-head">
+            <span class="highlight-title">Sentence-Level Analysis</span>
+            <div class="hl-legend">
+              <div class="hl-item"><div class="hl-dot hl-ai"></div>AI Generated</div>
+              <div class="hl-item"><div class="hl-dot hl-human"></div>Human Written</div>
+              <div class="hl-item"><div class="hl-dot hl-mixed"></div>Uncertain</div>
+            </div>
+          </div>
+          <div class="highlight-body" id="highlightBody"></div>
+        </div>
+        <div class="breakdown-card" style="margin-top:16px">
+          <div class="breakdown-head">Sentence Breakdown</div>
+          <div style="overflow-x:auto">
+            <table class="bk-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Sentence</th>
+                  <th>Classification</th>
+                  <th>Confidence</th>
+                </tr>
+              </thead>
+              <tbody id="breakdownBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /TEXT TAB -->
+
+  </div><!-- /auth-wrap -->
+</div><!-- /page-authenticator -->
